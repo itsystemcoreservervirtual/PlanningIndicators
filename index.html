@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanningIndicators</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        /* Barra superior unificada */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        header h1 {
+            font-size: 18px; /* Título pequeño */
+            font-weight: bold;
+        }
+        /* Menú de navegación alineado a la izquierda junto al título */
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+        nav button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        nav button:hover {
+            background-color: #3498db;
+        }
+        nav button.active {
+            background-color: #e67e22;
+        }
+        /* Contenedor de las páginas */
+        .content-container {
+            flex: 1;
+            position: relative;
+            background: white;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none; /* Ocultos por defecto */
+        }
+        iframe.active {
+            display: block; /* Solo se muestra el activo */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GCE GROUP</h1>
+        <!-- Menú de navegación en la misma hilera -->
+        <nav>
+            <button onclick="mostrarPagina('pagina1', this)" class="active">Indicadores GCE Group</button>
+            <button onclick="mostrarPagina('pagina2', this)">Supervisores En Piso</button>
+        </nav>
+    </header>
+
+    <!-- Contenedor donde se cargan tus links de Cloudflare -->
+    <div class="content-container">
+        <iframe id="pagina1" src="https://gce-group.pages.dev//" class="active"></iframe>
+        <iframe id="pagina2" src="http://supervisoresenpisoplanning.pages.dev/"></iframe>
+    </div>
+
+    <script>
+        function mostrarPagina(idPagina, boton) {
+            // Ocultar todos los iframes
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => iframe.classList.remove('active'));
+
+            // Quitar la clase 'active' de todos los botones
+            const botones = document.querySelectorAll('nav button');
+            botones.forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar el iframe seleccionado y activar el botón
+            document.getElementById(idPagina).classList.add('active');
+            boton.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
