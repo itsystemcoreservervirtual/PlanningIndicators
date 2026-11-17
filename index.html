@@ -3,105 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MenuPlanningIndicators</title>
+    <title>Menu Planning Indicators</title>
+    <!-- Fuente moderna Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --bg-header: #0f172a;       /* Azul pizarra muy oscuro */
+            --bg-nav: #1e293b;          /* Contenedor de pestañas */
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;    /* Azul corporativo */
+            --active-bg: #ffffff;
+            --active-text: #0f172a;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f1f5f9;
             display: flex;
             flex-direction: column;
             height: 100vh;
+            overflow: hidden;
         }
-        /* Barra superior unificada */
+
+        /* Barra superior elegante y ligeramente más compacta */
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 10px 20px;
+            background-color: var(--bg-header);
+            color: var(--text-primary);
+            padding: 0 20px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
+            border-bottom: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            z-index: 10;
         }
-        header h1 {
-            font-size: 18px; /* Título pequeño */
-            font-weight: bold;
-        }
-        /* Menú de navegación alineado a la izquierda junto al título */
-        nav {
+
+        /* Área de marca / título */
+        .brand {
             display: flex;
+            align-items: center;
             gap: 10px;
         }
-        nav button {
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+        }
+
+        header h1 {
             font-size: 14px;
-            border-radius: 5px;
-            transition: background 0.3s;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
         }
+
+        /* Contenedor derecho que agrupa el menú y el botón de recargar */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Navegación estilo Segmented Control (más compacta) */
+        nav {
+            display: flex;
+            background-color: var(--bg-nav);
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            gap: 3px;
+        }
+
+        nav button {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         nav button:hover {
-            background-color: #3498db;
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.05);
         }
+
         nav button.active {
-            background-color: #e67e22;
+            background-color: var(--active-bg);
+            color: var(--active-text);
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
-        /* Contenedor de las páginas */
+
+        /* Botón de recarga proporcionado al nuevo menú */
+        .btn-refresh {
+            background: var(--bg-nav);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+        }
+
+        .btn-refresh:active svg {
+            transform: rotate(180deg);
+        }
+
+        .btn-refresh svg {
+            transition: transform 0.3s ease;
+        }
+
+        /* Contenedor principal */
         .content-container {
             flex: 1;
             position: relative;
-            background: white;
+            background: #ffffff;
         }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            display: none; /* Ocultos por defecto */
+            display: none;
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
         }
+
         iframe.active {
-            display: block; /* Solo se muestra el activo */
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        /* Indicador de carga sutil detrás del iframe */
+        .loader-wrapper {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #64748b;
+            font-size: 13px;
+            z-index: 1;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsivo para pantallas pequeñas */
+        @media (max-width: 768px) {
+            header {
+                height: auto;
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            nav {
+                flex: 1;
+                overflow-x: auto;
+            }
+            nav button {
+                flex: 1;
+                justify-content: center;
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Menu Planning Indicators</h1>
-        <!-- Menú de navegación en la misma hilera -->
-        <nav>
-            <button onclick="mostrarPagina('pagina1', this)" class="active">Indicadores GCE</button>
-            <button onclick="mostrarPagina('pagina2', this)">Supervisores En Piso</button>
-            <button onclick="mostrarPagina('pagina3', this)">Portal Ventas</button>
-        </nav>
+        <!-- Logo y Título a la izquierda -->
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+            </div>
+            <h1>Menu Planning Indicators</h1>
+        </div>
+
+        <!-- Menú compacto + Botón de recarga juntos a la derecha -->
+        <div class="header-actions">
+            <nav> <!--copiar y pegar la misma linea para gregar un nuevo boton cambiando el numero de pagina-->
+                <button onclick="mostrarPagina('pagina1', this)" class="active">Supervisores En Piso</button>
+                <button onclick="mostrarPagina('pagina2', this)">Indicadores GCE</button>
+                <button onclick="mostrarPagina('pagina3', this)">Portal Ventas GCE</button>
+            </nav>
+
+            <button class="btn-refresh" onclick="recargarActual()" title="Recargar vista actual">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+            </button>
+        </div>
     </header>
 
-    <!-- Contenedor donde se cargan tus links de Cloudflare -->
+    <!-- Contenedor de vistas -->
     <div class="content-container">
-        <iframe id="pagina1" src="https://gce-group.pages.dev//" class="active"></iframe>
-        <iframe id="pagina2" src="https://supervisoresenpisoplanning.pages.dev/"></iframe>
+        <div class="loader-wrapper">
+            <div class="spinner"></div>
+            <span>Cargando panel...</span>
+        </div>
+                 <!--copiar y pegar la misma linea para gregar el link del nuevo boton cambiando el numero de pagina-->
+        <iframe id="pagina1" src="https://supervisoresenpisoplanning.pages.dev/" class="active"></iframe> 
+        <iframe id="pagina2" src="https://gce-group.pages.dev/"></iframe>
         <iframe id="pagina3" src="https://gceportalventas.pages.dev/"></iframe>
     </div>
 
     <script>
         function mostrarPagina(idPagina, boton) {
-            // Ocultar todos los iframes
             const iframes = document.querySelectorAll('iframe');
             iframes.forEach(iframe => iframe.classList.remove('active'));
 
-            // Quitar la clase 'active' de todos los botones
             const botones = document.querySelectorAll('nav button');
             botones.forEach(btn => btn.classList.remove('active'));
 
-            // Mostrar el iframe seleccionado y activar el botón
             document.getElementById(idPagina).classList.add('active');
             boton.classList.add('active');
+        }
+
+        function recargarActual() {
+            const iframeActivo = document.querySelector('iframe.active');
+            if (iframeActivo) {
+                iframeActivo.src = iframeActivo.src;
+            }
         }
     </script>
 
